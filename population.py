@@ -10,6 +10,9 @@ class Population(object):
     def __getitem__(self,index):
         return self.individuals[index]
 
+    def dim(self):
+        return len(self.individuals[0])
+
     def select(self,fitness_fun,k=None):
         if(k==None):
             k=len(self)/2
@@ -49,6 +52,20 @@ class Individual(object):
         new_genes=[ flip(bit_i) for bit_i in bits]
         new_genes=np.array(new_genes).astype(float)
         return Individual(new_genes)
+
+class Crossover(object):
+    def __init__(self,pair):
+        self.pair=pair
+    
+    def __call__(self):
+        dim=len(self.pair[0])
+        genes=[self.get_gene(j) 
+                for j in range(dim)]
+        return Individual(np.array(genes))
+
+    def get_gene(self,j):
+        choice_j=random.choice([0, 1])
+        return self.pair_i[choice_j][j]
 
 def make_population(n,dim):
     individuals=[ make_individual(dim)  
