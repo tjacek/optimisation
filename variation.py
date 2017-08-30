@@ -23,7 +23,7 @@ class MutationVariation(Variation):
         return population.Population(new_individuals)
 
 class CrossoverVariation(Variation):
-    def __init__(self, n_descendants=4):
+    def __init__(self, n_descendants=2):
         super(CrossoverVariation,self).__init__(n_descendants)
 
     def next_generation(self,popul):
@@ -33,7 +33,7 @@ class CrossoverVariation(Variation):
                         for pair_i in pairs]
         for pair_i in parent_pairs:             
             new_individuals+=[ pair_i() 
-                                for t in range(self.n_descendants)]
+                                for t in range(2*self.n_descendants)]
         return population.Population(new_individuals)
 
 class CrossoverPair(object):
