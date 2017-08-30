@@ -1,17 +1,31 @@
 import population
 import fitness
-import random
+import variation
 
-def experiment(fitness_fun,popul,iter=50):
-    for i in range(iter):
-        popul=new_population(fitness_fun,popul,k=2)
-        print(i)
-        print(popul.average_fitness(fitness_fun))
-    return popul
+class Experiment(object):
+    def __init__(self, n_popul,indiv_dim,fitness_fun,variation):
+        self.n_popul=n_popul
+        self.indiv_dim=indiv_dim
+        self.fitness_fun=fitness_fun
+        self.variation=variation
+        self.popul=None
+        self.all_iters=0
 
-popul=population.make_population(100,1000)
-fitness_fun=fitness.simple_sum
-experiment(fitness_fun,popul)
-#new_pop=multiply(popul)
-#print(len(new_pop))
-#print(popul.avrage_fitness(fitness.simple_sum))
+    def __call__(self,n_iters):
+        if(self.popul==None):
+            self.popul=population.make_population(self.n_popul,self.indiv_dim)
+        for i in range(n_iters):
+            self.popul=self.variation.new_population(self.fitness_fun,self.popul)
+            print(len(self.popul))
+            print(self.popul.average_fitness(self.fitness_fun))
+        self.all_iters+=n_iters
+        return self.popul
+    
+    def reset(self):
+        self.popul=None
+        self.all_iters=0
+
+exp=Experiment(n_popul=100,indiv_dim=1000,
+               fitness_fun=fitness.simple_sum,
+               variation= variation.MutationVariation()) #CrossoverVariation())
+exp(50)

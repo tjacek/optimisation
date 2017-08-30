@@ -1,4 +1,6 @@
 import numpy as np
+import random
+import population
 
 class Variation(object):
     def __init__(self, n_descendants):
@@ -17,14 +19,14 @@ class MutationVariation(Variation):
         new_individuals=[]
         for indiv_i in popul:
             new_individuals+=[indiv_i.mutate() 
-                                for i in range(super.n_descendants)]
+                                for i in range(self.n_descendants)]
         return population.Population(new_individuals)
 
 class CrossoverVariation(Variation):
     def __init__(self, n_descendants=4):
         super(CrossoverVariation,self).__init__(n_descendants)
 
-    def multiply_crossover(self,popul):
+    def next_generation(self,popul):
         new_individuals=[]
         pairs=random_pairs(popul)
         parent_pairs=[CrossoverPair(pair_i)
@@ -42,17 +44,19 @@ class CrossoverPair(object):
         dim=len(self.pair[0])
         genes=[self.get_gene(j) 
                 for j in range(dim)]
-        return Individual(np.array(genes))
+        return population.Individual(np.array(genes))
 
     def get_gene(self,j):
         choice_j=random.choice([0, 1])
-        return self.pair_i[choice_j][j]
+        return self.pair[choice_j][j]
 
-def random_pairs(popul):
-    n_pairs=len(popul)/2
+def random_pairs(items):
+    if(type(items)!=list):
+        items=list(items)
+    n_pairs=len(items)/2
     def get_pair(i):
-        return (popul[2*i],popul[2*i+1])
-    random.shuffle(popul)
+        return (items[2*i],items[2*i+1])
+    random.shuffle(items)
     pairs=[get_pair(i) 
             for i in range(n_pairs)]
     return pairs
