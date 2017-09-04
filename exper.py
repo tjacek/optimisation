@@ -2,6 +2,13 @@ import population
 import fitness
 import variation
 
+class PlotBuilder(object):
+    def __init__(self,n_exper,indiv_dim,step=10):
+        self.indiv_dim=indiv_dim
+        self.step=step
+
+#    def init_exper(self):
+        
 class Experiment(object):
     def __init__(self, n_popul,indiv_dim,fitness_fun,variation):
         self.n_popul=n_popul
@@ -27,5 +34,5 @@ class Experiment(object):
 
 exp=Experiment(n_popul=100,indiv_dim=1000,
                fitness_fun=fitness.simple_sum,
-               variation= variation.MutationVariation()) #CrossoverVariation())
+               variation= variation.CrossoverVariation())
 exp(50)
